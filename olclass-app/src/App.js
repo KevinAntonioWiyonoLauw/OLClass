@@ -11,6 +11,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [favorites, setFavorites] = useState([]);
   const [allFoods, setAllFoods] = useState([]);
+  const [error, setError] = useState(null); // State untuk error
 
   useEffect(() => {
     if (darkMode) {
@@ -22,8 +23,14 @@ function App() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const data = await fetchCulinaryData(searchQuery);
-      setAllFoods(data);
+      try {
+        const data = await fetchCulinaryData(searchQuery);
+        setAllFoods(data);
+        setError(null); // Reset error jika berhasil
+      } catch (err) {
+        setError(err.message);
+        console.error("Error fetching culinary data:", err);
+      }
     };
     fetchData();
   }, [searchQuery]);
@@ -46,8 +53,8 @@ function App() {
       >
 
         {/* Header */}
-        <header className="bg-white dark:bg-gray-700 p-4 flex justify-between items-center z-10">
-          <h1 className="text-2xl font-bold ml-5">Culinary Data</h1>
+        <header className="bg-white dark:bg-gray-700 p-4 flex justify-between items-center z-10 relative">
+          <h1 className="text-2xl font-bold text-center flex-grow">Culinary Data</h1>
           <div className="flex items-center space-x-4">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
@@ -80,6 +87,11 @@ function App() {
 
         {/* Main Content */}
         <main className="flex-grow p-4 z-10">
+          {error && (
+            <div className="mb-4 p-4 bg-red-200 text-red-800 rounded">
+              {error}
+            </div>
+          )}
           <h2 className="text-xl font-bold mb-4 ml-5">Favorites</h2>
           <FoodList 
             foods={favorites} 
@@ -87,7 +99,7 @@ function App() {
             favorites={favorites} 
             isFavorites={true} 
           />
-          <h2 className="text-xl font-bold mb-4 ml-5 pt-4">All Recipes</h2>
+          <h2 className="text-xl font-bold mb-4 ml-5 pt-4 mt-8">All Recipes</h2> {/* Tambahkan mt-8 untuk jarak */}
           <FoodList 
             foods={allFoods} 
             toggleFavorite={toggleFavorite} 
