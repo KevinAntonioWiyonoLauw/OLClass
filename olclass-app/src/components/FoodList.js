@@ -203,12 +203,13 @@ const settings = isFavorites ? {
                         <p className="text-center text-gray-700 dark:text-gray-300">No recipes found.</p>
                     </div>
                 )}
+
             </Slider>
 
             {/* Modal */}
             {selectedFood && (
                 <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 transition-opacity duration-300">
-                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-2xl w-full p-6 relative overflow-y-auto max-h-full transform transition-transform duration-300 scale-100">
+                    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-lg max-w-lg w-full p-6 relative overflow-y-auto max-h-[80vh] transform transition-transform duration-300 scale-100">
                         <button
                             onClick={closeModal}
                             className="absolute top-3 right-3 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300"
@@ -251,7 +252,7 @@ const settings = isFavorites ? {
                                         {recipeDetails.images.map((image, index) => (
                                             <div key={index}>
                                                 <img
-                                                    className="w-full h-64 object-cover rounded mb-4"
+                                                    className="w-full h-48 object-cover rounded mb-4"
                                                     src={image}
                                                     alt={`${recipeDetails.title} image ${index + 1}`}
                                                 />
@@ -260,7 +261,7 @@ const settings = isFavorites ? {
                                     </Slider>
                                 ) : (
                                     <img
-                                        className="w-full h-64 object-cover rounded mb-4"
+                                        className="w-full h-48 object-cover rounded mb-4"
                                         src={recipeDetails.image}
                                         alt={recipeDetails.title}
                                     />
@@ -310,8 +311,7 @@ const settings = isFavorites ? {
                         ) : (
                             <p className="text-center text-gray-700 dark:text-gray-300">No details available.</p>
                         )}
-                    </div>
-                )}
+                    </div>          
             </div>
         )}
     </div>
