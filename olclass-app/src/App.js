@@ -87,7 +87,7 @@ function App() {
             favorites={favorites} 
             isFavorites={true} 
           />
-          <h2 className="text-xl font-bold mb-4 ml-5">All Recipes</h2>
+          <h2 className="text-xl font-bold mb-4 ml-5 pt-4">All Recipes</h2>
           <FoodList 
             foods={allFoods} 
             toggleFavorite={toggleFavorite} 
