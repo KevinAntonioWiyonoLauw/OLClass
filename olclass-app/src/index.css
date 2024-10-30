@@ -1,0 +1,13 @@
+/* src/index.css */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Aplikasi Font Montserrat secara Global */
+body {
+  @apply font-montserrat;
+}
+
+.dark body {
+  @apply bg-gray-900 text-gray-100;
+}
