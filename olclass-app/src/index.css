@@ -11,3 +11,26 @@ body {
 .dark body {
   @apply bg-gray-900 text-gray-100;
 }
+
+/* Mengatur warna dots untuk light mode */
+.slick-dots li button:before {
+  color: #000; /* Warna dots saat light mode */
+  opacity: 0.75;
+}
+
+/* Mengatur warna dots untuk dark mode */
+.dark .slick-dots li button:before {
+  color: #fff; /* Warna dots saat dark mode */
+  opacity: 0.75;
+}
+
+/* Opsional: Warna dots aktif */
+.slick-dots li.slick-active button:before {
+  color: #1ab553; /* Warna dots aktif saat light mode */
+  opacity: 1;
+}
+
+.dark .slick-dots li.slick-active button:before {
+  color: #18a44c; /* Warna dots aktif saat dark mode */
+  opacity: 1;
+}

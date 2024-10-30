@@ -3,28 +3,32 @@ import React, { useContext, useEffect, useState } from 'react';
 import { FoodContext } from '../context/FoodContext';
 import { fetchCulinaryData } from '../api/foodApi';
 import axios from 'axios';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
+import Slider from "react-slick";
 
-const FoodList = () => {
-    const { foods, setFoods } = useContext(FoodContext);
+const FoodList = ({ searchQuery = '', foods = [], toggleFavorite, favorites = [], isFavorites = false }) => {
+    const { setFoods } = useContext(FoodContext);
     const [selectedFood, setSelectedFood] = useState(null);
     const [recipeDetails, setRecipeDetails] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        const getFoods = async () => {
-            try {
-                const data = await fetchCulinaryData();
-                setFoods(data);
-            } catch (err) {
-                console.error("Error fetching culinary data:", err);
-            }
-        };
-        getFoods();
-    }, [setFoods]);
+        if (!isFavorites) {
+            const getFoods = async () => {
+                try {
+                    const data = await fetchCulinaryData(searchQuery);
+                    setFoods(data);
+                } catch (err) {
+                    console.error("Error fetching culinary data:", err);
+                }
+            };
+            getFoods();
+        }
+    }, [setFoods, searchQuery, isFavorites]);
 
     const openModal = async (food) => {
-        console.log("Fetching details for food ID:", food.id); // Debugging
         setSelectedFood(food);
         setIsLoading(true);
         setError(null);
@@ -36,7 +40,6 @@ const FoodList = () => {
                 },
             });
 
-            console.log("Recipe Details:", response.data); // Debugging
             setRecipeDetails(response.data);
         } catch (err) {
             console.error("Error fetching recipe details:", err.response ? err.response.data : err.message);
@@ -52,54 +55,155 @@ const FoodList = () => {
         setError(null);
     };
 
+// Pengaturan untuk React Slick Slider
+const settings = isFavorites ? {
+    dots: true,
+    infinite: favorites.length > 3,
+    speed: 500,
+    slidesToShow: 4, // Diubah menjadi 4
+    slidesToScroll: 1,
+    centerMode: false,
+    responsive: [
+        {
+            breakpoint: 1024,
+            settings: {
+                slidesToShow: 3,
+            }
+        },
+        {
+            breakpoint: 768,
+            settings: {
+                slidesToShow: 2,
+            }
+        },
+        {
+            breakpoint: 640,
+            settings: {
+                slidesToShow: 1,
+                centerMode: false,
+                arrows: true, // Mengaktifkan panah pada mobile
+            }
+        }
+    ],
+    appendDots: dots => (
+        <div className="mt-6 pb-4"> {/* Menambahkan padding-bottom */}
+            <ul className="slick-dots">{dots}</ul>
+        </div>
+    ),
+    arrows: true,
+    autoplay: true,
+    autoplaySpeed: 3000,
+} : {
+    dots: true,
+    infinite: foods.length > 3,
+    speed: 500,
+    slidesToShow: 4, // Diubah menjadi 4
+    slidesToScroll: 1,
+    centerMode: true,
+    centerPadding: '60px',
+    responsive: [
+        {
+            breakpoint: 1024,
+            settings: {
+                slidesToShow: 3,
+                centerPadding: '40px',
+            }
+        },
+        {
+            breakpoint: 768,
+            settings: {
+                slidesToShow: 2,
+                centerPadding: '30px',
+            }
+        },
+        {
+            breakpoint: 640,
+            settings: {
+                slidesToShow: 1,
+                centerMode: false,
+                arrows: true, // Mengaktifkan panah pada mobile
+            }
+        }
+    ],
+    appendDots: dots => (
+        <div className="mt-6 pb-4"> {/* Menambahkan padding-bottom */}
+            <ul className="slick-dots">{dots}</ul>
+        </div>
+    ),
+    arrows: true,
+    autoplay: true,
+    autoplaySpeed: 3000,
+};
+
     return (
-        <div className="p-6">
-            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="p-6 relative">
+            {!isFavorites && (
+                <>
+                    {/* Gradasi Transparan Kiri */}
+                    <div className="absolute top-0 left-0 w-16 h-full bg-gradient-to-r from-gray-100 dark:from-gray-800 pointer-events-none"></div>
+                    {/* Gradasi Transparan Kanan */}
+                    <div className="absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-gray-100 dark:from-gray-800 pointer-events-none"></div>
+                </>
+            )}
+            
+            <Slider {...settings}>
                 {foods.length > 0 ? (
                     foods.map(food => (
-                        <div
-                            key={food.id}
-                            className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 overflow-hidden"
-                        >
-                            <a href="#">
-                                <img className="rounded-t-lg" src={food.image} alt={food.title} />
-                            </a>
-                            <div className="p-5">
-                                <a href="#">
-                                    <h5 className="mb-2 text-lg tracking-tight text-gray-900 dark:text-white text-center">
-                                        {food.title}
-                                    </h5>
-                                </a>
-                                {/* Deskripsi telah dihapus */}
+                        <div key={food.id} className="px-4">
+                            <div
+                                className="relative bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 overflow-hidden flex flex-col justify-between h-[350px] w-full"
+                            >
                                 <button
-                                    onClick={() => openModal(food)}
-                                    disabled={isLoading}
-                                    className={`inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-full ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                    onClick={() => toggleFavorite(food)}
+                                    className={`absolute top-2 right-2 text-3xl ${favorites.some(fav => fav.id === food.id) ? 'text-yellow-500' : 'text-gray-800'} transition-transform duration-300 transform hover:scale-110`}
                                 >
-                                    {isLoading ? 'Loading...' : 'Read more'}
-                                    <svg
-                                        className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
-                                        aria-hidden="true"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        fill="none"
-                                        viewBox="0 0 14 10"
-                                    >
-                                        <path
-                                            stroke="currentColor"
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                            strokeWidth="2"
-                                            d="M1 5h12m0 0L9 1m4 4L9 9"
-                                        />
-                                    </svg>
+                                    ★
                                 </button>
+                                <a href="#">
+                                    <img className="w-full h-48 object-cover rounded-t-lg" src={food.image} alt={food.title} />
+                                </a>
+                                <div className="p-5 flex-grow flex flex-col justify-between">
+                                    <div>
+                                        <a href="#">
+                                            <h5 className="mb-2 text-lg font-bold text-gray-900 dark:text-white text-left">
+                                                {food.title}
+                                            </h5>
+                                        </a>
+                                    </div>
+                                    <div className="mt-auto">
+                                        <button
+                                            onClick={() => openModal(food)}
+                                            disabled={isLoading}
+                                            className={`inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-full ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                                        >
+                                            {isLoading ? 'Loading...' : 'Read more'}
+                                            <svg
+                                                className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+                                                aria-hidden="true"
+                                                xmlns="http://www.w3.org/2000/svg"
+                                                fill="none"
+                                                viewBox="0 0 14 10"
+                                            >
+                                                <path
+                                                    stroke="currentColor"
+                                                    strokeLinecap="round"
+                                                    strokeLinejoin="round"
+                                                    strokeWidth={2}
+                                                    d="M1 5h12m0 0L9 1m4 4L9 9"
+                                                />
+                                            </svg>
+                                        </button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     ))
                 ) : (
-                    <p className="text-center text-gray-700 dark:text-gray-300">Loading...</p>
+                    <div className="w-full">
+                        <p className="text-center text-gray-700 dark:text-gray-300">No recipes found.</p>
+                    </div>
                 )}
-            </div>
+            </Slider>
 
             {/* Modal */}
             {selectedFood && (
@@ -133,11 +237,34 @@ const FoodList = () => {
                                 <h2 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white text-center">
                                     {recipeDetails.title}
                                 </h2>
-                                <img
-                                    className="w-full h-64 object-cover rounded mb-4"
-                                    src={recipeDetails.image}
-                                    alt={recipeDetails.title}
-                                />
+                                {recipeDetails.images && recipeDetails.images.length > 0 ? (
+                                    <Slider {...{
+                                        dots: true,
+                                        infinite: recipeDetails.images.length > 1,
+                                        speed: 500,
+                                        slidesToShow: 1,
+                                        slidesToScroll: 1,
+                                        arrows: true,
+                                        autoplay: true,
+                                        autoplaySpeed: 3000
+                                    }}>
+                                        {recipeDetails.images.map((image, index) => (
+                                            <div key={index}>
+                                                <img
+                                                    className="w-full h-64 object-cover rounded mb-4"
+                                                    src={image}
+                                                    alt={`${recipeDetails.title} image ${index + 1}`}
+                                                />
+                                            </div>
+                                        ))}
+                                    </Slider>
+                                ) : (
+                                    <img
+                                        className="w-full h-64 object-cover rounded mb-4"
+                                        src={recipeDetails.image}
+                                        alt={recipeDetails.title}
+                                    />
+                                )}
                                 <h3 className="text-2xl font-semibold mb-2 text-gray-800 dark:text-gray-200">Description</h3>
                                 <p className="text-gray-700 dark:text-gray-300 mb-4">
                                     {recipeDetails.summary.replace(/<[^>]+>/g, '')}
@@ -161,7 +288,7 @@ const FoodList = () => {
                                     href={recipeDetails.sourceUrl}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="mt-4 inline-flex items-center px-4 py-2 bg-blue-700 text-white rounded-lg hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+                                    className="mt-4 inline-flex items-center px-4 py-2 bg-green-700 text-white rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-blue-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
                                 >
                                     View Full Recipe
                                     <svg
@@ -171,7 +298,12 @@ const FoodList = () => {
                                         viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            strokeWidth={2}
+                                            d="M17 8l4 4m0 0l-4 4m4-4H3"
+                                        />
                                     </svg>
                                 </a>
                             </>
@@ -179,9 +311,10 @@ const FoodList = () => {
                             <p className="text-center text-gray-700 dark:text-gray-300">No details available.</p>
                         )}
                     </div>
-                </div>
-            )}
-        </div>
+                )}
+            </div>
+        )}
+    </div>
     );
 };
 
