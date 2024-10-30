@@ -1,22 +1,19 @@
 // src/api/foodApi.js
 import axios from 'axios';
 
-const API_KEY = process.env.REACT_APP_SPOONACULAR_API_KEY;
-const BASE_URL = 'https://api.spoonacular.com/recipes';
-
-export const fetchCulinaryData = async (query = '') => {
+export const fetchCulinaryData = async (query) => {
     try {
-        const response = await axios.get(`${BASE_URL}/complexSearch`, {
+        const response = await axios.get('https://api.spoonacular.com/recipes/complexSearch', {
             params: {
-                number: 10, // Jumlah data yang diambil
-                apiKey: API_KEY,
-                addRecipeInformation: true, // Menambahkan informasi resep
-                query, // Menambahkan query pencarian
+                apiKey: process.env.REACT_APP_SPOONACULAR_API_KEY,
+                number: 10,
+                addRecipeInformation: true,
+                query: query,
             },
         });
         return response.data.results;
     } catch (error) {
-        console.error('Error fetching culinary data:', error);
-        return [];
+        console.error("Error fetching culinary data:", error);
+        throw error;
     }
 };
