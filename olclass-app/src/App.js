@@ -11,7 +11,7 @@ function App() {
   const [searchQuery, setSearchQuery] = useState('');
   const [favorites, setFavorites] = useState([]);
   const [allFoods, setAllFoods] = useState([]);
-  const [error, setError] = useState(null); // State untuk error
+  const [error, setError] = useState(null); 
 
   useEffect(() => {
     if (darkMode) {
@@ -26,7 +26,7 @@ function App() {
       try {
         const data = await fetchCulinaryData(searchQuery);
         setAllFoods(data);
-        setError(null); // Reset error jika berhasil
+        setError(null); 
       } catch (err) {
         setError(err.message);
         console.error("Error fetching culinary data:", err);
@@ -40,7 +40,7 @@ function App() {
       if (prevFavorites.some(fav => fav.id === food.id)) {
         return prevFavorites.filter(fav => fav.id !== food.id);
       } else {
-        return [food, ...prevFavorites]; // Menambahkan baru di awal
+        return [food, ...prevFavorites]; 
       }
     });
   };
@@ -54,7 +54,7 @@ function App() {
 
         {/* Header */}
         <header className="bg-white dark:bg-gray-700 p-4 flex justify-between items-center z-10 relative">
-          <h1 className="text-2xl font-bold text-center flex-grow">Culinary Data</h1>
+          <h1 className="text-2xl font-bold flex-grow ml-5">Culinary Data</h1>
           <div className="flex items-center space-x-4">
             <div className="relative">
               <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
