@@ -34,3 +34,26 @@ body {
   color: #18a44c; /* Warna dots aktif saat dark mode */
   opacity: 1;
 }
+
+/* Mengurangi margin antar dots */
+.slick-dots li {
+  margin: 0 4px;
+}
+
+/* Mengurangi ukuran dots */
+.slick-dots li button:before {
+  font-size: 10px;
+  color: #4ade80; /* Warna dots, sesuaikan dengan tema Anda */
+  opacity: 0.75;
+}
+
+/* Mengatur posisi dots agar tidak turun ke bawah pada layar kecil */
+.slick-dots {
+  bottom: 10px; /* Sesuaikan posisi vertikal dots */
+}
+
+@media (max-width: 767px) {
+  .slick-dots {
+    display: none !important;
+  }
+}

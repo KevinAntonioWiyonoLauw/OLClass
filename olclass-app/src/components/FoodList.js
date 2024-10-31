@@ -86,7 +86,7 @@ const settings = isFavorites ? {
         }
     ],
     appendDots: dots => (
-        <div className="mt-6 pb-4"> {/* Menambahkan padding-bottom */}
+        <div className="mt-6 mb-6 pb-4"> {/* Menambahkan padding-bottom */}
             <ul className="slick-dots">{dots}</ul>
         </div>
     ),
@@ -126,7 +126,7 @@ const settings = isFavorites ? {
         }
     ],
     appendDots: dots => (
-        <div className="mt-6 pb-4"> {/* Menambahkan padding-bottom */}
+        <div className="mt-6 mb-6 pb-4"> {/* Menambahkan padding-bottom */}
             <ul className="slick-dots">{dots}</ul>
         </div>
     ),
