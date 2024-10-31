@@ -20,7 +20,6 @@ export const fetchCulinaryData = async (params) => {
   const data = await response.json();
   return data.results;
 };
-
 // New fetchDailyMealPlan function
 export const fetchDailyMealPlan = async () => {
   const query = new URLSearchParams({
