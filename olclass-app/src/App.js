@@ -56,11 +56,11 @@ const AppContent = React.memo(() => {
   return (
     <ThemeProvider>
       <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white transition-colors duration-300">
-        <nav className="bg-white dark:bg-gray-900 shadow">
+        <nav className="bg-green-500 dark:bg-green-500 shadow">
           <div className="max-w-7xl mx-auto px-4">
             <div className="flex justify-between items-center h-16">
               <div className="flex-shrink-0">
-                <a href="#" className="text-xl font-bold text-gray-800 dark:text-white">
+                <a href="#" className="text-xl font-bold text-white dark:text-white">
                   Culinary Data
                 </a>
               </div>
@@ -191,7 +191,7 @@ const AppContent = React.memo(() => {
           />
         </main>
         <br/><br/>
-        <footer className="bg-green-500 dark:bg-green-700 text-center p-4 font-bold">
+        <footer className="bg-green-500 text-white dark:bg-green-500 text-center p-4 font-bold">
           © 2024 OLClass
         </footer>
       </div>
