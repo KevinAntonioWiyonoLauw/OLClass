@@ -156,7 +156,7 @@ const FoodList = memo(({ searchQuery = '', foods = [], toggleFavorite, favorites
     >
         <button
             onClick={() => toggleFavorite(food)}
-            className={`absolute top-2 right-2 text-3xl ${favorites.some(fav => fav.id === food.id) ? 'text-yellow-500' : 'text-white'} transition-transform duration-300 transform hover:scale-110 z-10`}
+            className={`absolute top-2 right-2 text-4xl ${favorites.some(fav => fav.id === food.id) ? 'text-yellow-500' : 'text-white'} transition-transform duration-300 transform hover:scale-110 z-10`}
         >
             ★
         </button>
