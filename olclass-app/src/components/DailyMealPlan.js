@@ -44,7 +44,7 @@ const DailyMealPlan = () => {
   };
 
   return (
-    <div className="p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md my-8">
+    <div className="p-4 bg-white dark:bg-gray-900 rounded-lg shadow-md">
       <h2 className="text-2xl font-bold mb-4 text-center">Daily Meal Plan</h2>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {mealPlan.meals.map((meal) => (
