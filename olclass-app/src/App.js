@@ -211,14 +211,14 @@ function AppContent() {
               {error}
             </div>
           )}
-          <h2 className="text-xl font-bold mb-4">Favorit</h2>
+          <h2 className="text-xl font-bold mb-4 pl-6 mt-4">Favorit</h2>
           <FoodList
             foods={favorites}
             toggleFavorite={toggleFavorite}
             favorites={favorites}
             isFavorites={true}
           />
-          <h2 className="text-xl font-bold mb-4 mt-8">Semua Resep</h2>
+          <h2 className="text-xl font-bold mb-4 pl-6">Semua Resep</h2>
           <FoodList
             foods={allFoods}
             toggleFavorite={toggleFavorite}
@@ -230,7 +230,7 @@ function AppContent() {
         <br/><br/>
 
         {/* Footer */}
-        <footer className="bg-green-700 dark:bg-green-800 text-center p-4 font-bold">
+        <footer className="bg-green-500 dark:bg-green-700 text-center p-4 font-bold">
           © 2024 OLClass
         </footer>
       </div>

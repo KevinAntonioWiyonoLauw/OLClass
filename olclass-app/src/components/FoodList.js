@@ -150,53 +150,56 @@ const settings = isFavorites ? {
                 {foods.length > 0 ? (
                     foods.map(food => (
                         <div key={food.id} className="px-4">
-                            <div
-                                className="relative bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 overflow-hidden flex flex-col justify-between h-[350px] w-full"
-                            >
-                                <button
-                                    onClick={() => toggleFavorite(food)}
-                                    className={`absolute top-2 right-2 text-3xl ${favorites.some(fav => fav.id === food.id) ? 'text-yellow-500' : 'text-gray-800'} transition-transform duration-300 transform hover:scale-110`}
-                                >
-                                    ★
-                                </button>
-                                <a href="#">
-                                    <img className="w-full h-48 object-cover rounded-t-lg" src={food.image} alt={food.title} />
-                                </a>
-                                <div className="p-5 flex-grow flex flex-col justify-between">
-                                    <div>
-                                        <a href="#">
-                                            <h5 className="mb-2 text-lg font-bold text-gray-900 dark:text-white text-left">
-                                                {food.title}
-                                            </h5>
-                                        </a>
-                                    </div>
-                                    <div className="mt-auto">
-                                        <button
-                                            onClick={() => openModal(food)}
-                                            disabled={isLoading}
-                                            className={`inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-full ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
-                                        >
-                                            {isLoading ? 'Loading...' : 'Read more'}
-                                            <svg
-                                                className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
-                                                aria-hidden="true"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                fill="none"
-                                                viewBox="0 0 14 10"
-                                            >
-                                                <path
-                                                    stroke="currentColor"
-                                                    strokeLinecap="round"
-                                                    strokeLinejoin="round"
-                                                    strokeWidth={2}
-                                                    d="M1 5h12m0 0L9 1m4 4L9 9"
-                                                />
-                                            </svg>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+    <div
+        className="relative bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 overflow-hidden flex flex-col justify-between h-[400px] w-full"
+    >
+        <button
+            onClick={() => toggleFavorite(food)}
+            className={`absolute top-2 right-2 text-3xl ${favorites.some(fav => fav.id === food.id) ? 'text-yellow-500' : 'text-white'} transition-transform duration-300 transform hover:scale-110 z-10`}
+        >
+            ★
+        </button>
+        <a href="#">
+            <div className="relative">
+                <img className="w-full h-48 object-cover rounded-t-lg" src={food.image} alt={food.title} />
+                <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-green-900"></div>
+            </div>
+        </a>
+        <div className="p-5 flex-grow flex flex-col justify-between">
+            <div>
+                <a href="#">
+                    <h5 className="mb-2 text-lg font-bold text-gray-900 dark:text-white text-left">
+                        {food.title}
+                    </h5>
+                </a>
+            </div>
+            <div className="mt-auto">
+                <button
+                    onClick={() => openModal(food)}
+                    disabled={isLoading}
+                    className={`inline-flex items-center px-3 py-2 text-sm font-medium text-center text-white bg-green-700 rounded-lg hover:bg-green-800 focus:ring-4 focus:outline-none focus:ring-green-300 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800 w-full ${isLoading ? 'opacity-50 cursor-not-allowed' : ''}`}
+                >
+                    {isLoading ? 'Loading...' : 'Read more'}
+                    <svg
+                        className="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+                        aria-hidden="true"
+                        xmlns="http://www.w3.org/2000/svg"
+                        fill="none"
+                        viewBox="0 0 14 10"
+                    >
+                        <path
+                            stroke="currentColor"
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M1 5h12m0 0L9 1m4 4L9 9"
+                        />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
                     ))
                 ) : (
                     <div className="w-full">
@@ -234,7 +237,10 @@ const settings = isFavorites ? {
                             <p className="text-center text-red-500">{error}</p>
                         ) : recipeDetails ? (
                             <>
-                                <h2 className="text-3xl font-bold mb-4 text-gray-900 dark:text-white text-center">
+                                <h2
+                                    className="text-xl font-semibold mb-2 text-gray-800 dark:text-gray-200 break-words truncate"
+                                    title={recipeDetails.title}
+                                >
                                     {recipeDetails.title}
                                 </h2>
                                 {recipeDetails.images && recipeDetails.images.length > 0 ? (
