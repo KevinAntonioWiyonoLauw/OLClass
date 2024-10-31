@@ -1,5 +1,4 @@
-// src/components/FoodList.js
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState, useCallback, memo } from 'react';
 import { FoodContext } from '../context/FoodContext';
 import { fetchCulinaryData } from '../api/foodApi';
 import axios from 'axios';
@@ -7,7 +6,7 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 import Slider from "react-slick";
 
-const FoodList = ({ searchQuery = '', foods = [], toggleFavorite, favorites = [], isFavorites = false }) => {
+const FoodList = memo(({ searchQuery = '', foods = [], toggleFavorite, favorites = [], isFavorites = false }) => {
     const { setFoods } = useContext(FoodContext);
     const [selectedFood, setSelectedFood] = useState(null);
     const [recipeDetails, setRecipeDetails] = useState(null);
@@ -28,7 +27,7 @@ const FoodList = ({ searchQuery = '', foods = [], toggleFavorite, favorites = []
         }
     }, [setFoods, searchQuery, isFavorites]);
 
-    const openModal = async (food) => {
+    const openModal = useCallback(async (food) => {
         setSelectedFood(food);
         setIsLoading(true);
         setError(null);
@@ -47,93 +46,95 @@ const FoodList = ({ searchQuery = '', foods = [], toggleFavorite, favorites = []
         } finally {
             setIsLoading(false);
         }
-    };
+    }, []);
 
-    const closeModal = () => {
+    const closeModal = useCallback(() => {
         setSelectedFood(null);
         setRecipeDetails(null);
         setError(null);
-    };
+    }, []);
 
-// Pengaturan untuk React Slick Slider
-const settings = isFavorites ? {
-    dots: true,
-    infinite: favorites.length > 3,
-    speed: 500,
-    slidesToShow: 4, // Diubah menjadi 4
-    slidesToScroll: 1,
-    centerMode: false,
-    responsive: [
-        {
-            breakpoint: 1024,
-            settings: {
-                slidesToShow: 3,
+    // Adjusted React Slick Slider settings for better performance
+    const settings = isFavorites ? {
+        dots: true,
+        infinite: favorites.length > 3,
+        speed: 500,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        centerMode: false,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 3,
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 2,
+                }
+            },
+            {
+                breakpoint: 640,
+                settings: {
+                    slidesToShow: 1,
+                    centerMode: false,
+                    arrows: true,
+                }
             }
-        },
-        {
-            breakpoint: 768,
-            settings: {
-                slidesToShow: 2,
+        ],
+        appendDots: dots => (
+            <div className="mt-6 mb-6 pb-4">
+                <ul className="slick-dots">{dots}</ul>
+            </div>
+        ),
+        arrows: true,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        lazyLoad: 'ondemand', // Added lazy loading
+    } : {
+        dots: true,
+        infinite: foods.length > 3,
+        speed: 500,
+        slidesToShow: 4,
+        slidesToScroll: 1,
+        centerMode: true,
+        centerPadding: '60px',
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 3,
+                    centerPadding: '40px',
+                }
+            },
+            {
+                breakpoint: 768,
+                settings: {
+                    slidesToShow: 2,
+                    centerPadding: '30px',
+                }
+            },
+            {
+                breakpoint: 640,
+                settings: {
+                    slidesToShow: 1,
+                    centerMode: false,
+                    arrows: true,
+                }
             }
-        },
-        {
-            breakpoint: 640,
-            settings: {
-                slidesToShow: 1,
-                centerMode: false,
-                arrows: true, // Mengaktifkan panah pada mobile
-            }
-        }
-    ],
-    appendDots: dots => (
-        <div className="mt-6 mb-6 pb-4"> {/* Menambahkan padding-bottom */}
-            <ul className="slick-dots">{dots}</ul>
-        </div>
-    ),
-    arrows: true,
-    autoplay: true,
-    autoplaySpeed: 3000,
-} : {
-    dots: true,
-    infinite: foods.length > 3,
-    speed: 500,
-    slidesToShow: 4, // Diubah menjadi 4
-    slidesToScroll: 1,
-    centerMode: true,
-    centerPadding: '60px',
-    responsive: [
-        {
-            breakpoint: 1024,
-            settings: {
-                slidesToShow: 3,
-                centerPadding: '40px',
-            }
-        },
-        {
-            breakpoint: 768,
-            settings: {
-                slidesToShow: 2,
-                centerPadding: '30px',
-            }
-        },
-        {
-            breakpoint: 640,
-            settings: {
-                slidesToShow: 1,
-                centerMode: false,
-                arrows: true, // Mengaktifkan panah pada mobile
-            }
-        }
-    ],
-    appendDots: dots => (
-        <div className="mt-6 mb-6 pb-4"> {/* Menambahkan padding-bottom */}
-            <ul className="slick-dots">{dots}</ul>
-        </div>
-    ),
-    arrows: true,
-    autoplay: true,
-    autoplaySpeed: 3000,
-};
+        ],
+        appendDots: dots => (
+            <div className="mt-6 mb-6 pb-4">
+                <ul className="slick-dots">{dots}</ul>
+            </div>
+        ),
+        arrows: true,
+        autoplay: true,
+        autoplaySpeed: 3000,
+        lazyLoad: 'ondemand', // Added lazy loading
+    };
 
     return (
         <div className="p-6 relative">
@@ -161,7 +162,7 @@ const settings = isFavorites ? {
         </button>
         <a href="#">
             <div className="relative">
-                <img className="w-full h-48 object-cover rounded-t-lg" src={food.image} alt={food.title} />
+                <img loading="lazy" className="w-full h-48 object-cover rounded-t-lg" src={food.image} alt={food.title} />
                 <div className="absolute inset-0 bg-gradient-to-t from-transparent via-transparent to-green-900"></div>
             </div>
         </a>
@@ -321,6 +322,6 @@ const settings = isFavorites ? {
         )}
     </div>
     );
-};
+});
 
 export default FoodList;

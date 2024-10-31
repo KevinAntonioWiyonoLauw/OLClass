@@ -1,15 +1,17 @@
-// src/App.js
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useCallback } from 'react';
 import HeroSection from './HeroSection';
 import { FoodProvider, FoodContext } from './context/FoodContext';
 import FoodList from './components/FoodList';
-import DailyMealPlan from './components/DailyMealPlan'; // Import DailyMealPlan component
-import { fetchCulinaryData } from './api/foodApi'; // Ensure this import is present
+import DailyMealPlan from './components/DailyMealPlan';
+import { fetchCulinaryData } from './api/foodApi';
 import './index.css';
 import { SunIcon, MoonIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
 import { ThemeProvider } from '@material-tailwind/react';
+import { debounce } from 'lodash'; // Import lodash debounce
+const LazyHeroSection = React.lazy(() => import('./HeroSection')); // Lazy load HeroSection
+const LazyDailyMealPlan = React.lazy(() => import('./components/DailyMealPlan')); // Lazy load DailyMealPlan
 
-function AppContent() {
+const AppContent = React.memo(() => {
   const { favorites, toggleFavorite } = useContext(FoodContext);
   const [darkMode, setDarkMode] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
@@ -17,21 +19,10 @@ function AppContent() {
   const [error, setError] = useState(null); 
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   
-  // Daftar cuisines yang diinginkan
-  const cuisines = [
-    'American',
-    'Asian',
-    'European',
-    'Latin American'
-  ];
-
-  // State untuk filter kategori makanan
+  const cuisines = ['American', 'Asian', 'European', 'Latin American'];
   const [selectedFilter, setSelectedFilter] = useState('Semua');
-  
-  // State untuk opsi filter
   const filterOptions = ['Semua', ...cuisines];
 
-  // Mengatur kelas 'dark' pada elemen root berdasarkan state darkMode
   useEffect(() => {
     if (darkMode) {
       document.documentElement.classList.add('dark');
@@ -40,23 +31,24 @@ function AppContent() {
     }
   }, [darkMode]);
 
-  // Mengambil data culinary berdasarkan search query dan selectedFilter
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const params = { search: searchQuery, cuisine: selectedFilter === 'Semua' ? '' : selectedFilter };
-        const data = await fetchCulinaryData(params);
-        setAllFoods(data);
-        setError(null);
-      } catch (err) {
-        setError(err.message);
-        console.error("Error fetching culinary data:", err);
-      }
-    };
-    fetchData();
-  }, [searchQuery, selectedFilter]);
+  const fetchData = useCallback(async (params) => {
+    try {
+      const data = await fetchCulinaryData(params);
+      setAllFoods(data);
+      setError(null);
+    } catch (err) {
+      setError(err.message);
+      console.error("Error fetching culinary data:", err);
+    }
+  }, []);
 
-  // Fungsi untuk menangani toggle menu mobile
+  const debouncedFetchData = useCallback(debounce(fetchData, 300), [fetchData]);
+
+  useEffect(() => {
+    const params = { search: searchQuery, cuisine: selectedFilter === 'Semua' ? '' : selectedFilter };
+    debouncedFetchData(params);
+  }, [searchQuery, selectedFilter, debouncedFetchData]);
+
   const handleMobileMenuToggle = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
   };
@@ -64,20 +56,15 @@ function AppContent() {
   return (
     <ThemeProvider>
       <div className="min-h-screen flex flex-col bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-white transition-colors duration-300">
-        {/* Navbar */}
         <nav className="bg-white dark:bg-gray-900 shadow">
           <div className="max-w-7xl mx-auto px-4">
             <div className="flex justify-between items-center h-16">
-              {/* Logo */}
               <div className="flex-shrink-0">
                 <a href="#" className="text-xl font-bold text-gray-800 dark:text-white">
                   Culinary Data
                 </a>
               </div>
-              
-              {/* Desktop Menu */}
               <div className="hidden md:flex items-center">
-                {/* Search Input */}
                 <div className="mr-4">
                   <input
                     type="search"
@@ -87,8 +74,6 @@ function AppContent() {
                     placeholder="Search..."
                   />
                 </div>
-                
-                {/* Dark Mode Toggle */}
                 <button
                   onClick={() => setDarkMode(!darkMode)}
                   className="p-2 rounded-full bg-green-500 text-white hover:bg-green-600 transition-colors duration-300"
@@ -100,8 +85,6 @@ function AppContent() {
                   )}
                 </button>
               </div>
-
-              {/* Mobile Menu Button */}
               <div className="md:hidden">
                 <button
                   onClick={handleMobileMenuToggle}
@@ -116,12 +99,9 @@ function AppContent() {
               </div>
             </div>
           </div>
-
-          {/* Mobile Menu */}
           {isMobileMenuOpen && (
             <div className="md:hidden">
               <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                {/* Search Input */}
                 <input
                   type="search"
                   value={searchQuery}
@@ -129,8 +109,6 @@ function AppContent() {
                   className="w-full px-3 py-2 border rounded dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:outline-none focus:ring-2 focus:ring-green-500"
                   placeholder="Search..."
                 />
-                
-                {/* Dark Mode Toggle */}
                 <button
                   onClick={() => {
                     setDarkMode(!darkMode);
@@ -154,24 +132,14 @@ function AppContent() {
             </div>
           )}
         </nav>
-
-        {/* Hero Section */}
-        <HeroSection />
-
-        {/* Daily Meal Plan */}
-        <DailyMealPlan />
-
-        {/* Filter Container */}
+        <React.Suspense fallback={<div>Loading...</div>}>
+          <LazyHeroSection />
+          <LazyDailyMealPlan />
+        </React.Suspense>
         <div className="flex flex-col items-center mt-8">
-          {/* Container for Filter Resep */}
           <div className="bg-white dark:bg-gray-900 rounded-lg p-6 shadow-md w-full max-w-2xl">
-            {/* Judul Filter Resep */}
             <h3 className="text-xl font-semibold mb-4 text-center">Filter Resep</h3>
-
-            {/* Tombol Filter */}
-            {/* Responsive Layout: Horizontal on md and above, Dropdown on small screens */}
             <div>
-              {/* Desktop Filter Buttons */}
               <div className="hidden sm:flex justify-center space-x-2">
                 {filterOptions.map(option => (
                   <button
@@ -187,8 +155,6 @@ function AppContent() {
                   </button>
                 ))}
               </div>
-
-              {/* Mobile Dropdown Filter */}
               <div className="sm:hidden">
                 <select
                   value={selectedFilter}
@@ -203,8 +169,6 @@ function AppContent() {
             </div>
           </div>
         </div>
-
-        {/* Main Content */}
         <main id="resep" className="flex-grow p-4">
           {error && (
             <div className="mb-4 p-4 bg-red-200 text-red-800 rounded">
@@ -226,17 +190,14 @@ function AppContent() {
             isFavorites={false}
           />
         </main>
-        
         <br/><br/>
-
-        {/* Footer */}
         <footer className="bg-green-500 dark:bg-green-700 text-center p-4 font-bold">
           © 2024 OLClass
         </footer>
       </div>
     </ThemeProvider>
   );
-}
+});
 
 function AppWrapper() {
   return (
