@@ -8,6 +8,7 @@ import './index.css';
 import { SunIcon, MoonIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
 import { ThemeProvider } from '@material-tailwind/react';
 import { debounce } from 'lodash'; // Import lodash debounce
+import { Analytics } from "@vercel/analytics/react"
 const LazyHeroSection = React.lazy(() => import('./HeroSection')); // Lazy load HeroSection
 const LazyDailyMealPlan = React.lazy(() => import('./components/DailyMealPlan')); // Lazy load DailyMealPlan
 
