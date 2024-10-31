@@ -196,6 +196,7 @@ const AppContent = React.memo(() => {
           © 2024 OLClass
         </footer>
       </div>
+      <Analytics />
     </ThemeProvider>
   );
 });
