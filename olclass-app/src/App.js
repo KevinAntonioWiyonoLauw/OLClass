@@ -9,6 +9,7 @@ import { SunIcon, MoonIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/sol
 import { ThemeProvider } from '@material-tailwind/react';
 import { debounce } from 'lodash'; // Import lodash debounce
 import { Analytics } from "@vercel/analytics/react"
+import Chatbot from './components/Chatbot'; // Import Chatbot component
 const LazyHeroSection = React.lazy(() => import('./HeroSection')); // Lazy load HeroSection
 const LazyDailyMealPlan = React.lazy(() => import('./components/DailyMealPlan')); // Lazy load DailyMealPlan
 
@@ -191,6 +192,7 @@ const AppContent = React.memo(() => {
             isFavorites={false}
           />
         </main>
+        <Chatbot /> {/* Add Chatbot component */}
         <br/><br/>
         <footer className="bg-green-500 text-white dark:bg-green-500 text-center p-4 font-bold">
           © 2024 OLClass
