@@ -3,7 +3,6 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Aplikasi Font Montserrat secara Global */
 body {
   @apply font-montserrat;
 }
@@ -12,44 +11,39 @@ body {
   @apply bg-gray-900 text-gray-100;
 }
 
-/* Mengatur warna dots untuk light mode */
 .slick-dots li button:before {
-  color: #000; /* Warna dots saat light mode */
+  color: #000; 
   opacity: 0.75;
 }
 
-/* Mengatur warna dots untuk dark mode */
 .dark .slick-dots li button:before {
-  color: #fff; /* Warna dots saat dark mode */
+  color: #fff; 
   opacity: 0.75;
 }
 
 /* Opsional: Warna dots aktif */
 .slick-dots li.slick-active button:before {
-  color: #1ab553; /* Warna dots aktif saat light mode */
+  color: #1ab553; 
   opacity: 1;
 }
 
 .dark .slick-dots li.slick-active button:before {
-  color: #18a44c; /* Warna dots aktif saat dark mode */
+  color: #18a44c; 
   opacity: 1;
 }
 
-/* Mengurangi margin antar dots */
 .slick-dots li {
   margin: 0 4px;
 }
 
-/* Mengurangi ukuran dots */
 .slick-dots li button:before {
   font-size: 10px;
-  color: #4ade80; /* Warna dots, sesuaikan dengan tema Anda */
+  color: #4ade80; 
   opacity: 0.75;
 }
 
-/* Mengatur posisi dots agar tidak turun ke bawah pada layar kecil */
 .slick-dots {
-  bottom: 10px; /* Sesuaikan posisi vertikal dots */
+  bottom: 10px; 
 }
 
 @media (max-width: 767px) {

@@ -54,7 +54,6 @@ const FoodList = memo(({ searchQuery = '', foods = [], toggleFavorite, favorites
         setError(null);
     }, []);
 
-    // Adjusted React Slick Slider settings for better performance
     const settings = isFavorites ? {
         dots: true,
         infinite: favorites.length > 3,
@@ -92,7 +91,7 @@ const FoodList = memo(({ searchQuery = '', foods = [], toggleFavorite, favorites
         arrows: true,
         autoplay: true,
         autoplaySpeed: 3000,
-        lazyLoad: 'ondemand', // Added lazy loading
+        lazyLoad: 'ondemand', 
     } : {
         dots: true,
         infinite: foods.length > 3,
@@ -133,16 +132,16 @@ const FoodList = memo(({ searchQuery = '', foods = [], toggleFavorite, favorites
         arrows: true,
         autoplay: true,
         autoplaySpeed: 3000,
-        lazyLoad: 'ondemand', // Added lazy loading
+        lazyLoad: 'ondemand', 
     };
 
     return (
         <div className="p-6 relative">
             {!isFavorites && (
                 <>
-                    {/* Gradasi Transparan Kiri */}
+                    {/* Gradasi Transparan */}
                     <div className="absolute top-0 left-0 w-16 h-full bg-gradient-to-r from-gray-100 dark:from-gray-800 pointer-events-none"></div>
-                    {/* Gradasi Transparan Kanan */}
+                    {/* Gradasi Transparan */}
                     <div className="absolute top-0 right-0 w-16 h-full bg-gradient-to-l from-gray-100 dark:from-gray-800 pointer-events-none"></div>
                 </>
             )}

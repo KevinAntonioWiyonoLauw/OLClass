@@ -1,5 +1,4 @@
 // src/components/Chatbot.js
-
 import React, { useState, useEffect, useRef } from 'react';
 import { ChatBubbleLeftRightIcon, XMarkIcon } from '@heroicons/react/24/solid';
 import axios from 'axios';
@@ -12,13 +11,11 @@ const Chatbot = () => {
   const messagesEndRef = useRef(null);
 
   useEffect(() => {
-    // Generate a simple unique contextId
     const uniqueId = `ctx-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     setContextId(uniqueId);
   }, []);
 
   useEffect(() => {
-    // Scroll to the bottom when messages update
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 

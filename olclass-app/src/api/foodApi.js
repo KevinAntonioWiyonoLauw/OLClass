@@ -2,7 +2,6 @@
 const API_KEY = process.env.REACT_APP_SPOONACULAR_API_KEY;
 const cache = {};
 
-// Existing fetchCulinaryData function
 export const fetchCulinaryData = async (params) => {
   const { search, cuisine } = params;
   const query = new URLSearchParams({
@@ -28,7 +27,6 @@ export const fetchCulinaryData = async (params) => {
   return data.results;
 };
 
-// New fetchDailyMealPlan function
 export const fetchDailyMealPlan = async () => {
   const query = new URLSearchParams({
     timeFrame: 'day',

@@ -7,11 +7,11 @@ import { fetchCulinaryData } from './api/foodApi';
 import './index.css';
 import { SunIcon, MoonIcon, Bars3Icon, XMarkIcon } from '@heroicons/react/24/solid';
 import { ThemeProvider } from '@material-tailwind/react';
-import { debounce } from 'lodash'; // Import lodash debounce
+import { debounce } from 'lodash'; 
 import { Analytics } from "@vercel/analytics/react"
-import Chatbot from './components/Chatbot'; // Import Chatbot component
-const LazyHeroSection = React.lazy(() => import('./HeroSection')); // Lazy load HeroSection
-const LazyDailyMealPlan = React.lazy(() => import('./components/DailyMealPlan')); // Lazy load DailyMealPlan
+import Chatbot from './components/Chatbot'; 
+const LazyHeroSection = React.lazy(() => import('./HeroSection')); 
+const LazyDailyMealPlan = React.lazy(() => import('./components/DailyMealPlan')); 
 
 const AppContent = React.memo(() => {
   const { favorites, toggleFavorite } = useContext(FoodContext);
