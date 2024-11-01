@@ -1,12 +1,17 @@
-// src/components/DailyMealPlan.js
+// Mengimpor library React dan hooks yang diperlukan
 import React, { useEffect, useState } from 'react';
 import { fetchDailyMealPlan } from '../api/foodApi';
 
+// Komponen utama DailyMealPlan
 const DailyMealPlan = () => {
+  // State untuk menyimpan data meal plan
   const [mealPlan, setMealPlan] = useState(null);
+  // State untuk status loading
   const [isLoading, setIsLoading] = useState(false);
+  // State untuk menyimpan error
   const [error, setError] = useState(null);
 
+  // Hook useEffect untuk mengambil data saat komponen dipasang
   useEffect(() => {
     const getMealPlan = async () => {
       setIsLoading(true);
@@ -26,19 +31,22 @@ const DailyMealPlan = () => {
     getMealPlan();
   }, []);
 
+  // Menampilkan loading saat data sedang diambil
   if (isLoading) {
     return <div className="text-center">Loading Daily Meal Plan...</div>;
   }
 
+  // Menampilkan error jika terjadi masalah saat mengambil data
   if (error) {
     return <div className="text-center text-red-500">Error: {error}</div>;
   }
 
+  // Jika tidak ada meal plan, tidak menampilkan apapun
   if (!mealPlan) {
     return null;
   }
 
-  // Helper function to construct the correct image URL
+  // Fungsi pembantu untuk membentuk URL gambar yang benar
   const getImageUrl = (id, imageType) => {
     return `https://spoonacular.com/recipeImages/${id}-556x370.${imageType}`;
   };
@@ -86,4 +94,5 @@ const DailyMealPlan = () => {
   );
 };
 
+// Mengeksport komponen DailyMealPlan
 export default DailyMealPlan;

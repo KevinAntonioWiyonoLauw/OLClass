@@ -1,36 +1,47 @@
 // src/components/Chatbot.js
-import React, { useState, useEffect, useRef } from 'react';
-import { ChatBubbleLeftRightIcon, XMarkIcon } from '@heroicons/react/24/solid';
-import axios from 'axios';
+import React, { useState, useEffect, useRef } from 'react'; // Import React dan hooks yang diperlukan
+import { ChatBubbleLeftRightIcon, XMarkIcon } from '@heroicons/react/24/solid'; // Import ikon dari Heroicons
+import axios from 'axios'; // Import axios untuk melakukan request HTTP
 
 const Chatbot = () => {
+  // State untuk mengontrol apakah chatbot terbuka atau tidak
   const [isOpen, setIsOpen] = useState(false);
+  // State untuk menyimpan pesan-pesan dalam obrolan
   const [messages, setMessages] = useState([]);
+  // State untuk menyimpan input pengguna
   const [input, setInput] = useState('');
+  // State untuk menyimpan contextId unik
   const [contextId, setContextId] = useState('');
+  // Ref untuk mengacu pada akhir pesan agar bisa scroll otomatis
   const messagesEndRef = useRef(null);
 
+  // Effect untuk menghasilkan contextId unik saat komponen di-mount
   useEffect(() => {
     const uniqueId = `ctx-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     setContextId(uniqueId);
   }, []);
 
+  // Effect untuk men-scroll ke bawah setiap kali pesan baru ditambahkan
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Fungsi untuk toggle (buka/tutup) chatbot
   const toggleChat = () => {
     setIsOpen(!isOpen);
   };
 
+  // Fungsi untuk mengirim pesan
   const handleSend = async () => {
-    if (input.trim() === '') return;
+    if (input.trim() === '') return; // Jangan kirim pesan kosong
 
+    // Menambahkan pesan pengguna ke state
     const userMessage = { sender: 'user', text: input };
     setMessages((prev) => [...prev, userMessage]);
-    setInput('');
+    setInput(''); // Reset input
 
     try {
+      // Mengirim request ke API Spoonacular
       const response = await axios.get('https://api.spoonacular.com/food/converse', {
         params: {
           apiKey: process.env.REACT_APP_SPOONACULAR_API_KEY,
@@ -39,6 +50,7 @@ const Chatbot = () => {
         },
       });
 
+      // Menambahkan pesan bot ke state
       const botMessage = {
         sender: 'bot',
         text: response.data.answerText,
@@ -46,6 +58,7 @@ const Chatbot = () => {
       };
       setMessages((prev) => [...prev, botMessage]);
     } catch (error) {
+      // Menangani error dan menampilkan pesan error dari bot
       const errorMsg = error.response
         ? error.response.data.message
         : 'Gagal menghubungi chatbot.';
@@ -55,6 +68,7 @@ const Chatbot = () => {
     }
   };
 
+  // Fungsi untuk menangani key press (Enter untuk mengirim)
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
       handleSend();
@@ -63,7 +77,7 @@ const Chatbot = () => {
 
   return (
     <>
-      {/* Chatbot Popup Button */}
+      {/* Tombol Popup Chatbot */}
       {!isOpen && (
         <button
           onClick={toggleChat}
@@ -73,7 +87,7 @@ const Chatbot = () => {
         </button>
       )}
 
-      {/* Chatbot Container */}
+      {/* Kontainer Chatbot */}
       {isOpen && (
         <div className="fixed bottom-6 right-6 w-80 h-96 bg-white dark:bg-gray-800 rounded-lg shadow-lg flex flex-col">
           {/* Header */}
@@ -84,7 +98,7 @@ const Chatbot = () => {
             </button>
           </div>
 
-          {/* Messages */}
+          {/* Pesan-pesan */}
           <div className="flex-1 p-4 overflow-y-auto bg-gray-100 dark:bg-gray-700">
             {messages.map((msg, index) => (
               <div
@@ -101,7 +115,7 @@ const Chatbot = () => {
                   }`}
                 >
                   <p>{msg.text}</p>
-                  {/* Tampilkan Gambar Jika Ada */}
+                  {/* Menampilkan gambar jika ada */}
                   {msg.media && msg.media.length > 0 && (
                     <div className="mt-2 space-y-2">
                       {msg.media.map((mediaItem, idx) => (
